@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { Container, Section, SectionHeading } from "@/components/chrome";
+import { JsonLd } from "@/components/json-ld";
 import { site } from "@/lib/content";
 
+/** "Pune, Navi Mumbai and Thane" — for sentences, where a bare comma list reads wrong. */
+const places = `${site.locations.slice(0, -1).join(", ")} and ${site.locations.at(-1)}`;
+
 export const metadata: Metadata = {
-  title: "Contact",
-  description:
-    "Talk to 50LPA Consultancy Services in Pune, Navi Mumbai or Thane. The first conversation is an assessment, not a sales call.",
+  title: {
+    absolute: "Contact 50LPA — Consultancy in Pune, Navi Mumbai & Thane",
+  },
+  description: `Talk to ${site.fullName} in ${places}. Write to ${site.email} for an honest first assessment of where you are and what comes next.`,
+  alternates: { canonical: "/contact" },
 };
 
 const nextSteps = [
@@ -23,9 +29,45 @@ const nextSteps = [
   },
 ];
 
+/** Every answer below restates copy that already appears on this page. */
+const faqs = [
+  {
+    q: "Which cities does 50LPA work in?",
+    a: `In person across ${places}. Candidates elsewhere in India are handled online — interviews, mock sessions and branding work are all done remotely as a matter of course.`,
+  },
+  {
+    q: "What does 50LPA actually do?",
+    a: "Career consulting, professional branding, industry and technology guidance, job-readiness preparation, placement assistance, interview support, offer guidance and post-placement mentorship — as one process rather than a menu.",
+  },
+  {
+    q: "Does 50LPA guarantee a job?",
+    a: "No. We do not guarantee employment, sell jobs, or invent experience, employers, projects or qualifications on your behalf. Placement depends on the market, the role and your interviews — anyone promising a guaranteed offer is selling you something else.",
+  },
+  {
+    q: "Who does 50LPA work with?",
+    a: "Freshers and recent graduates, experienced professionals, career switchers, people returning after a career break, and senior professionals. The problems are different at each stage, so the work is different too.",
+  },
+  {
+    q: "What happens after I get in touch?",
+    a: "Three steps. You tell us where you are, we assess your profile against the market honestly, and you get a plan and a price — with no obligation until you have seen both.",
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
 export default function ContactPage() {
   return (
     <>
+      <JsonLd data={faqSchema} />
+
       <div className="grain relative overflow-hidden border-b border-line">
         <div aria-hidden className="grid-bg absolute inset-0" />
         <div
@@ -59,6 +101,7 @@ export default function ContactPage() {
               >
                 {site.email}
               </a>
+              <p className="mt-2 text-sm text-muted">{site.hours}</p>
             </div>
 
             <div className="reveal rounded-2xl border border-line bg-white p-6">
@@ -107,6 +150,26 @@ export default function ContactPage() {
             </li>
           ))}
         </ol>
+      </Section>
+
+      <Section id="faq" className="bg-paper">
+        <SectionHeading
+          title="Questions we get asked"
+          lede="Short answers here. The long ones belong in the first conversation."
+        />
+        <div className="mt-14 grid gap-5 lg:grid-cols-2">
+          {faqs.map((faq) => (
+            <div
+              key={faq.q}
+              className="reveal rounded-2xl border border-line bg-white p-6 sm:p-7"
+            >
+              <h3 className="font-display text-lg font-bold">{faq.q}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                {faq.a}
+              </p>
+            </div>
+          ))}
+        </div>
       </Section>
 
       <section className="grain relative scroll-mt-20 overflow-hidden border-t border-line bg-ink text-white/75">

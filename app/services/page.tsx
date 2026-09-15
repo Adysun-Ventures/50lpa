@@ -5,9 +5,11 @@ import { ServiceIcon } from "@/components/graphics";
 import { services } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Career consulting, professional branding, skill and industry guidance, job readiness, placement assistance, interview support, offer guidance and post-placement support.",
+  title: {
+    absolute: "Services — Career consulting, branding & placement",
+  },
+  description: `Career consulting, professional branding, industry guidance, job readiness, placement and interview support — ${services.length} services, run as one process.`,
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesPage() {

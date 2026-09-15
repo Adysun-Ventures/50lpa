@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Sans } from "next/font/google";
 import { SiteFooter, SiteHeader } from "@/components/chrome";
+import { JsonLd } from "@/components/json-ld";
 import { RevealRoot } from "@/components/reveal";
-import { site } from "@/lib/content";
+import { services, site } from "@/lib/content";
 import "./globals.css";
 
 const plex = IBM_Plex_Sans({
@@ -21,10 +22,20 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   metadataBase: new URL(`https://${site.domain}`),
   title: {
-    default: `${site.fullName} — ${site.tagline}`,
+    default: "Career Consultancy in Pune, Navi Mumbai & Thane — 50LPA",
     template: `%s — ${site.name}`,
   },
   description: site.description,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     title: `${site.fullName} — ${site.tagline}`,
     description: site.description,
@@ -33,6 +44,39 @@ export const metadata: Metadata = {
     locale: "en_IN",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.fullName} — ${site.tagline}`,
+    description: site.description,
+  },
+};
+
+/**
+ * Everything below is a restatement of what the site already says in visible
+ * copy. No `sameAs` (no social profiles exist yet), no `Person` node, no street
+ * address or opening hours — none of those have been confirmed.
+ */
+const organisationSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `https://${site.domain}/#organisation`,
+  name: site.fullName,
+  alternateName: site.name,
+  url: `https://${site.domain}/`,
+  slogan: site.tagline,
+  description: site.description,
+  email: site.email,
+  foundingDate: site.founded,
+  image: `https://${site.domain}/opengraph-image.png`,
+  logo: `https://${site.domain}/apple-icon.png`,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Pune",
+    addressRegion: "Maharashtra",
+    addressCountry: "IN",
+  },
+  areaServed: site.locations.map((name) => ({ "@type": "City", name })),
+  knowsAbout: services.map((service) => service.name),
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -48,6 +92,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </noscript>
       </head>
       <body className="flex min-h-full flex-col bg-white">
+        <JsonLd data={organisationSchema} />
         <RevealRoot />
         <SiteHeader />
         <main className="flex-1">{children}</main>

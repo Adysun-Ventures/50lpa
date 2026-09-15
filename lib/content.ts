@@ -4,11 +4,11 @@ export const site = {
   tagline: "Career development & placement consultancy",
   domain: "50lpa.com",
   description:
-    "A career development and placement consultancy in Pune, Navi Mumbai and Thane. Assessment, professional branding, industry guidance, interview preparation, placement and post-placement mentorship — as one continuous relationship.",
-  // Replace with the real inbox and number before launch.
+    "Career development and placement consultancy in Pune, Navi Mumbai and Thane. Assessment, branding, interview preparation, placement and post-placement support.",
+  // Confirm this inbox is live before launch — it is the only contact route on the site.
   email: "hello@50lpa.com",
-  phone: "+91 ",
-  phoneNote: "Placeholder — add the real number in lib/content.ts",
+  founded: "2025",
+  hours: "Mon – Sat",
   locations: ["Pune", "Navi Mumbai", "Thane"],
 };
 

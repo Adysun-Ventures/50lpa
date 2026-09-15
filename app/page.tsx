@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   Container,
@@ -12,6 +13,7 @@ import {
   SegmentScale,
   ServiceIcon,
 } from "@/components/graphics";
+import { JsonLd } from "@/components/json-ld";
 import { BandLadder, JourneyTimeline } from "@/components/visuals";
 import { journey, principles, services, site } from "@/lib/content";
 
@@ -22,9 +24,28 @@ const stats = [
   { value: 1, label: "profile across every platform" },
 ];
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+/** The nine stages, in the same words the timeline below already shows. */
+const journeySchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: `How the ${site.name} career development process works`,
+  description: `The ${journey.length} stages a candidate moves through, from the first honest assessment to planning the next move.`,
+  step: journey.map((stage, index) => ({
+    "@type": "HowToStep",
+    position: index + 1,
+    name: stage.step,
+    text: stage.note,
+  })),
+};
+
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={journeySchema} />
       <div className="grain relative overflow-hidden">
         <div aria-hidden className="grid-bg absolute inset-0" />
         <div
