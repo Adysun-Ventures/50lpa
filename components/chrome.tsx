@@ -186,11 +186,24 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <p className="mt-14 border-t border-white/10 pt-7 text-xs leading-relaxed text-white/50">
-          {site.fullName}. Career consulting, professional branding and
-          placement assistance. We do not guarantee employment outcomes, and we
-          never fabricate a candidate&rsquo;s experience.
-        </p>
+        <div className="mt-14 flex flex-col gap-5 border-t border-white/10 pt-7 text-xs leading-relaxed text-white/50 sm:flex-row sm:items-start sm:justify-between">
+          <p className="max-w-2xl">
+            {site.fullName}. Career consulting, professional branding and
+            placement assistance. We do not guarantee employment outcomes, and
+            we never fabricate a candidate&rsquo;s experience.
+          </p>
+          <nav className="flex shrink-0 gap-6">
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-white"
+            >
+              Privacy
+            </Link>
+            <Link href="/terms" className="transition-colors hover:text-white">
+              Terms
+            </Link>
+          </nav>
+        </div>
       </Container>
     </footer>
   );

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Sans } from "next/font/google";
+import Script from "next/script";
 import { SiteFooter, SiteHeader } from "@/components/chrome";
 import { JsonLd } from "@/components/json-ld";
 import { RevealRoot } from "@/components/reveal";
@@ -79,6 +80,9 @@ const organisationSchema = {
   knowsAbout: services.map((service) => service.name),
 };
 
+/** GA4 web stream for 50lpa.com. Public by nature — it ships in the page source. */
+const analyticsId = "G-G466VNLM3W";
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -97,6 +101,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+
+        {/* afterInteractive: nothing on the page depends on analytics having
+            loaded, so it stays off the critical path. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${analyticsId}');`}
+        </Script>
       </body>
     </html>
   );
