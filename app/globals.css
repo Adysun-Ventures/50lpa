@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #070c18;
+  --color-ink-soft: #232c42;
+  --color-brand: #1b3fb8;
+  --color-brand-deep: #102a80;
+  --color-brand-bright: #4f7bff;
+  --color-accent: #ffb020;
+  --color-accent-soft: #fff1d6;
+  --color-paper: #f4f6fa;
+  --color-line: #dce2ec;
+  --color-muted: #59637a;
+}
+
+@theme inline {
+  --font-sans: var(--font-plex);
+  --font-display: var(--font-archivo);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #ffffff;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+}
+
+/* ---------------------------------------------------------------- utilities */
+
+.nums {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Soft colour glows used behind the hero and dark sections. */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.grid-bg {
+  background-image: linear-gradient(
+      to right,
+      rgba(27, 63, 184, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(27, 63, 184, 0.07) 1px, transparent 1px);
+  background-size: 58px 58px;
+}
+
+.grid-bg-dark {
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 58px 58px;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --------------------------------------------------------------- animations */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grow-up {
+  from {
+    transform: scaleY(0.04);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(-6px);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(30px, -24px, 0) scale(1.12);
+  }
+}
+
+/* The ladder settles from the bottom rung upward. */
+.band {
+  opacity: 0;
+  animation: rise 620ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* Chart bars grow from their base. */
+.bar {
+  transform-origin: bottom;
+  animation: grow-up 900ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  transform: scaleY(0.04);
+}
+
+.chip {
+  animation: float-y 5.5s ease-in-out infinite;
+}
+
+.ring {
+  animation: pulse-ring 2.4s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+}
+
+.drift {
+  animation: drift 18s ease-in-out infinite;
+}
+
+/* Scroll reveal: elements start shifted, `.is-in` is added on intersection. */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* The journey rail draws downward as the section comes into view. */
+.rail-progress {
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1500ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.rail-progress.is-in {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band,
+  .bar,
+  .chip,
+  .ring,
+  .drift {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+
+  .reveal,
+  .rail-progress {
+    opacity: 1;
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
